@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl.connections import connections
-from elasticsearch_dsl import Search, Q
+from elasticsearch_dsl import Search, Q,A
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from .models import Product,Categoryy
@@ -40,6 +40,7 @@ def searching(request):
     if q :
         products = ProductDocument.search().query("match",name=q)
         response = products.execute()
+        
     else :
         products=''
     context = {'products':products,'response':response}
@@ -57,18 +58,21 @@ def gotocat(request):
 def category(request):
         categorylist = Categoryy.objects.all()
         products = ProductDocument.search().sort('price')
-        context = {'categorylist': categorylist,'products':products}
+        context = {'categorylist': categorylist}
         return render(request,'product/category.html',context)
 
 def productscategory(request):
     s = ProductDocument.search()
-    
+    qs = s.to_queryset()
+    a = A('terms', field='reference') 
+    r = s.aggs.bucket('reference_terms',a)
+    return HttpResponse(qs)
+    # v = r.metric('min_price','min',field='price')
     categ_id=request.GET.get('category_id')
     if categ_id :
         obj = get_object_or_404(Categoryy, pk=categ_id)
         s = s.filter("match", category=obj.categoryname)
-        
-
+         
     s = s.sort('price')
     page = request.GET.get('page', 1)
     total = s.count()
