@@ -21,6 +21,7 @@ def comparepage(request,product_id):
     total = s.count()
     s = s[0:total]
     p=list(s)
+    # okok
     paginator = Paginator(p, 12)
     try:
         products = paginator.page(page)
