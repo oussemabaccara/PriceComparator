@@ -39,9 +39,10 @@ def searching(request):
     q=request.GET.get('q')
     if q :
         products = ProductDocument.search().query("match",name=q)
+        response = products.execute()
     else :
         products=''
-    context = {'products':products}
+    context = {'products':products,'response':response}
     return render(request,'product/searching.html',context)
 
 def index(request):
@@ -69,31 +70,6 @@ def productscategory(request):
         
 
     s = s.sort('price')
-    # client = connections.create_connection(hosts=['http://localhost:9200'])
-    # s = Search(using=client, index="hightechtn_new")
-
-    # # how simple we just past CURL code here
-    # body = {
-    #     "size": 0,
-    #     "aggs": {
-    #         "by_ref": {
-    #             "terms": {
-    #                 "field": "reference"
-    #             }
-    #         }
-    #     }
-    # }
-
-    # s = Search.from_dict(body)
-    # s = s.index("hightechtn_new")
-    # body = s.to_dict()
-
-    # t = s.execute()
-
-    # for item in t.aggregations.by_ref.buckets:
-    # # item.key will the house number
-    #     print (item.key, item.doc_count)
-    # return HttpResponse("sfqf")
     page = request.GET.get('page', 1)
     total = s.count()
     s = s[0:total]
