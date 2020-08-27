@@ -1,0 +1,42 @@
+{%load static%}
+<!-- Quick-view modal popup start-->
+<div class="modal fade bd-example-modal-lg theme-modal" id="quick-view-product1-{{ obj.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content quick-view-modal">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="row">
+                    <div class="col-lg-6 col-xs-12">
+                        <div class="quick-view-img">
+                            <img src="{{ obj.image }}" class="img-fluid" alt="product"> 
+                            </div>
+                    </div>
+                    <div class="col-lg-6 rtl-text">
+                        <div class="product-right">
+                            <h2>{{ obj.name }}</h2>
+                            <div class="border-product">
+                                <h6 class="product-title">product details</h6>
+                                <p>{{ obj.description }}</p>
+                            </div>
+                            <div class="product-description border-product">
+                                <h6 class="product-title">marketplace</h6>
+                                <p>{{ obj.marketplace }}</p>
+                            </div>
+                            <div class="product-description border-product">
+                                <h6 class="product-title">price</h6>
+                                <p>{{ obj.price }}</p>
+                            </div>
+                            <div class="product-description border-product">
+                                <h6 class="product-title">Publishing date</h6>
+                                <p>{{ obj.timestamp }}</p>
+                            </div>
+                            <div class="product-buttons text-center"><a href="{{ obj.url }}" target="_blank" class="btn btn-normal">Go to store</a> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Quick-view modal popup end-->

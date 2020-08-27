@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% load static %}
+
+<head>
+{% include "partials/head.html"%}
+
+{%block css%}{%endblock%}
+</head>
+
+<body class="bg-light">
+
+    <!-- loader start -->
+    <div class="loader-wrapper">
+        <div>
+            <img src=" {% static 'assets/images/loader.gif' %} " alt="loader">
+        </div>
+    </div>
+    <!-- loader end -->
+
+    {% include "partials/header.html"%}
+
+    {%block content%}{%endblock%}
+
+    {% include "partials/footer.html"%}
+
+    {% include "partials/js.html"%}
+    {%block js%}{%endblock%}
+</body>
+
+</html>

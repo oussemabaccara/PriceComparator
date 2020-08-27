@@ -1,0 +1,61 @@
+{%extends "base.html"%}
+
+{%block content%}
+
+{%load static%}
+{%block css%}
+<link rel="stylesheet" type="text/css" href=" {% static 'assets/css/color2.css' %} " media="screen" id="color">
+{%endblock%}
+<!--title-start-->
+<div class="title1 section-my-space mt-0">
+    <h4>Categories</h4>
+</div>
+<!--title-end-->
+
+<!--product box start -->
+<section class=" ratio_asos product section-pb-space ">
+    <div class="custom-container ">
+        <div class="row">
+            <div class="col pr-0">
+                <div class="product-slide-6  no-arrow">
+                    {%for categoryy in categorylist%}
+                    <div>
+                        <div class="product-box">
+                            <div class="product-imgbox">
+                                <div class="product-front">
+                                    <img src="{{ categoryy.categoryimg }}" class="img-fluid" alt="product">
+                                </div>
+                                <div class="product-back">
+                                    <img src="{{ categoryy.categoryimg }}" class="img-fluid" alt="product">
+                                </div>
+                                <div class="product-icon icon-inline">
+                                    <a href="{% url 'product:products' %}?category_id={{categoryy.id }}"><i class="ti-search" aria-hidden="false"></i></a>
+                                </div>
+                                <!-- ?category_id={{categoryy.id }} -->
+                            </div>
+
+                            <div class="product-detail detail-inline">
+                                <div class="detail-title">
+                                    <div class="detail-left">
+                                        
+                                        <a href="#">
+                                            <h6 class="price-title">
+                                                {{ categoryy.categoryname }}
+                                            </h6>
+                                        </a>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--product box end-->
+{%include "product/partials/quick-view.html" %}
+{%endblock content%}
