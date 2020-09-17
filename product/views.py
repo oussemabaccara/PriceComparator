@@ -9,9 +9,12 @@ from django.core.paginator import Paginator
 # Create your views here.
 
 def comparepage(request,product_id):
+    categ_id=request.GET.get('category_id')
     obj = get_object_or_404(Product, pk=product_id)
     page = request.GET.get('page', 1)
     productlist = Product.objects.values('category')
+    s = ProductDocument.search()
+    s = s.filter("match", reference=obj.reference)
    
     # use = Elasticsearch()
     # for i in s:
@@ -29,7 +32,8 @@ def comparepage(request,product_id):
         products = paginator.page(12)
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
-    context ={'productspercat' : s ,'obj':obj,'products':products}
+    categorylist = Categoryy.objects.all()
+    context ={'productspercat' : s ,'obj':obj,'products':products,'categorylist':categorylist, 'categ_id': categ_id,}
     # return HttpResponse(s)
     return render(request,'product/productscompare.html',context)
 
@@ -63,22 +67,42 @@ def category(request):
 
 def productscategory(request):
     s = ProductDocument.search()
-    qs = s.to_queryset()
-    a = A('terms', field='reference') 
-    r = s.aggs.bucket('reference_terms',a)
-    return HttpResponse(qs)
+    # qs = s.to_queryset()
+    # a = A('terms', field='reference') 
+    # r = s.aggs.bucket('reference_terms',a)
+    # return HttpResponse(qs)
     # v = r.metric('min_price','min',field='price')
     categ_id=request.GET.get('category_id')
     if categ_id :
         obj = get_object_or_404(Categoryy, pk=categ_id)
         s = s.filter("match", category=obj.categoryname)
+        s = s.sort('price')
+        qs = s.to_queryset()
+        l = list(qs)
+        output = []
+        output2= []
+        for x in l:
+            if x.reference not in output:
+                output.append(x.reference)
+                output2.append(x)
+        
+        # q=0
+        # a=[(l[1])]
+        # for u in range(len(l)-1):
+        #     while q <= (len(a)-1):
+        #         if l[u].reference==a[q].reference:
+        #             q=len(a)-1
+        #         else :
+        #             a.append(l[u])
+        #             q=q+1
+        
          
-    s = s.sort('price')
+    
     page = request.GET.get('page', 1)
-    total = s.count()
-    s = s[0:total]
-    p=list(s)
-    paginator = Paginator(p, 12)
+    # total = output2.count()
+    # s = s[0:total]
+    # p=list(s)
+    paginator = Paginator(output2, 12)
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
@@ -87,6 +111,6 @@ def productscategory(request):
         products = paginator.page(paginator.num_pages)
         
     categorylist = Categoryy.objects.all()
-    context ={'productspercat' : s ,'products':products, 'categorylist':categorylist, 'categ_id': categ_id,}
+    context ={'productspercat' : output2 ,'products':products, 'categorylist':categorylist, 'categ_id': categ_id,}
     return render(request,'product/products.html',context)
 
